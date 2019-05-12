@@ -61,17 +61,15 @@
 	function deletestu(index) {
 		var data=$("#stuste").datagrid("getData");
 		var row=data.rows[index];
-		$.messager.confirm("提示","确认删除么？",function(r){
-			if(r){
-				$.post("deletestu",{
-					s_id:row.id
+		$.messager.confirm("提示","确认删除么？",function(res){
+			if(res){
+				$.post("deletestus",{
+					s_id:row.s_id
 				},function(res){
 					if(res>0){
-						
 						$("#stuste").datagrid("reload");
 						$.messager.alert("提示","删除成功")
 					}else{
-						
 						$.messager.alert("提示","删除失败")
 					}
 				},"json")
@@ -79,10 +77,58 @@
 		})
 		
 	}
+	function lookstus(index){
+		var arr=$("#stuste").datagrid("getData");//获取数据表格加载完成时返回的数据
+		var row=arr.rows[index];//根据我们所选中的行的下标获取选中行的数据
+		$("#stu-chakan-form").form("load",row);//把我们获取的行中的数据填充但form表单中去
+		$("#stu-chakan-dialog").dialog("open");//打开我们的窗口
+	}
+	function chakanReset(){
+		$("#stu-chakan-dialog").dialog("close");//关闭窗口
+	}
+	function updatestus(index){
+		var arr=$("stuste").datagrid("getData");
+		var row=arr.rows[index]; 
+		$("#stu-xiugai-form").form("load",row);
+		$("stu-xiugai-dialog").dialog("open")			
+		
+	}
+	function updateSubmission(){
+		$.post("updatestu",{
+			s_id:$("#updates_id").val(),
+			s_name:$("#updates_name").val(),
+			s_sex:$("#updates_sex").val(),
+			s_age:$("#updates_age").val(),
+			s_phone:$("#updates_phone").val(),
+			s_education:$("#updates_education").val(),
+			s_state:$("#updates_state").val(),
+			s_msgsource:$("#updates_msgsource").val(),
+			s_sourceurl:$("#updates_sourceurl").val(),
+			s_sourcekeyword:$("#updates_sourcekeyword").val(),
+			s_address:$("#updates_address").val(),
+			s_concern:$("#updates_concern").val(),
+			s_frompart:$("#updates_frompart").val(),
+			s_qq:$("#updates_qq").val(),
+			s_weixin:$("#updates_weixin").val(),
+			s_isbaobei:$("#updates_isbaobei").val()
+		},function(res){
+			if(res>0){
+				//修改成功
+				$("#stuste").datagrid("reload");
+				$("#stu-xiugai-dialog").dialog("close")
+				$.messager.alert("提示","修改成功");
+			}else{
+				//修改失败
+				$.messager.alert("提示","修改失败");
+			}
+			
+		},"json")
+		
+	}
 </script>
 </head>
 <body>
-	<table id="stuste" style="width:1000px">
+	<table id="stuste">
 		<thead>
 			<tr>
 				<th data-options="field:'s_id',title:'s_id'">id</th>
@@ -91,6 +137,7 @@
 				<th data-options="field:'s_age',title:'s_age'">年龄</th>
 				<th data-options="field:'s_phone',title:'s_phone'">电话</th>
 				<th data-options="field:'s_education',title:'s_education'">学历</th>			
+				<th data-options="field:'s_stuclass',title:'s_stuclass'">课程方向</th>			
 				<th data-options="field:'s_state',title:'s_state'">状态</th>			
 				<th data-options="field:'s_msgsource',title:'s_msgsource'">来源渠道</th>			
 				<th data-options="field:'s_sourceurl',title:'s_sourceurl'">来源网站</th>			
@@ -141,5 +188,242 @@
 			 <a href="javascript:void(0)" onclick="tianjiastu()"	class="easyui-linkbutton"	data-options="iconCls:'icon-search',plain:true">添加</a>
 		</form>
 	</div>
+	
+	<!-- 查看 -->
+		<div id="stu-chakan-dialog" class="easyui-dialog" data-options="iconCls:'icon-save',resizable:true,modal:true,closed:true,buttons:[
+				{
+				text:'取消',
+				handler:function(){chakanReset()}
+			}]">
+		<form id="stu-chakan-form" class="easyui-form">
+			<table>
+				<tr>
+					<td>学员姓名：</td>
+					<td><input type="text" name="s_name" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>年龄：</td>
+					<td><input type="text" name="s_age" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>性别：</td>
+					<td><input type="text" name="s_sex"class="easyui-textbox"  data-options="formatter:formattersex"></td>
+				</tr>
+				<tr>
+					<td>电话：</td>
+					<td><input type="text" name="s_phone" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>个人状态：</td>
+					<td><input type="text" name="s_state" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>学历：</td>
+					<td><input type="text" name="s_education" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>来源渠道：</td>
+					<td><input type="text" name="s_msgsource" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>来源网站：</td>
+					<td><input type="text" name="s_sourceurl" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>来源关键词：</td>
+					<td><input type="text" name="s_sourcekeyword" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>所在区域：</td>
+					<td><input type="text" name="s_address" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>学员qq：</td>
+					<td><input type="text" name="s_qq" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>客户微信：</td>
+					<td><input type="text" name="s_weixin" class="easyui-textbox"></td>
+				</tr>
+				<!-- <tr>
+					<td>备注：</td>
+					<td><input type="text" name="s_content" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>创建时间：</td>
+					<td><input type="text" name="s_createtime" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>是否有效：</td>
+					<td><input type="text" name="s_isvalid" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>打分：</td>
+					<td><input type="text" name="s_record" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>是否回访：</td>
+					<td><input type="text" name="s_isreturnvist" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>首次回访时间：</td>
+					<td><input type="text" name="s_firstvisittime" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>是否上门：</td>
+					<td><input type="text" name="s_ishome" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>上门时间：</td>
+					<td><input type="text" name="s_hometime" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>无效原因：</td>
+					<td><input type="text" name="s_lostvalid" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>是否缴费：</td>
+					<td><input type="text" name="s_ispay" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>缴费时间：</td>
+					<td><input type="text" name="s_paytime" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>缴费金额：</td>
+					<td><input type="text" name="s_money" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>是否退费：</td>
+					<td><input type="text" name="s_isreturnmoney" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>是否进班：</td>
+					<td><input type="text" name="s_isinclass" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>进班时间：</td>
+					<td><input type="text" name="s_inclasstime" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>进班备注：</td>
+					<td><input type="text" name="s_inclasscontent" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>是否删除：</td>
+					<td><input type="text" name="s_isdel" class="easyui-textbox"></td>
+				</tr>
+				<tr> -->
+					<td>来源部门：</td>
+					<td><input type="text" name="s_frompart" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>关注：</td>
+					<td><input type="text" name="s_concern" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>是否报备：</td>
+					<td><input type="text" name="s_isbaobei" class="easyui-textbox" data-options="formatter:formattersex"></td>
+				</tr>
+				<!-- <tr>
+					<td>用户编号：</td>
+					<td><input type="text" name="s_userid" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>退费原因：</td>
+					<td><input type="text" name="s_returnmoneycontent" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>定金金额：</td>
+					<td><input type="text" name="s_premoney" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>定金时间：</td>
+					<td><input type="text" name="s_premoneytime" class="easyui-textbox"></td>
+				</tr> -->
+			</table>
+		</form>
+	</div>
+	
+	<!-- 修改 -->
+	<div id="stu-xiugai-dialog" class="easyui-dialog" data-options="iconCls:'icon-save',resizable:true,modal:true,closed:true,buttons:[{
+				text:'提交',
+				handler:function(){updateSubmission()}
+			},{
+				text:'取消',
+				handler:function(){updateReset()}
+			}]">
+		<form id="stu-xiugai-form" class="easyui-form">
+			<table>
+				<tr style="display:none;">
+					<td>编号：</td>
+					<td><input type="text" name="s_id" id="updates_id" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>姓名：</td>
+					<td><input type="text" name="s_name" id="updates_name" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>性别：</td>
+					<td><input type="text" name="s_sex" id="updates_sex" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>年龄：</td>
+					<td><input type="text" name="s_age" id="updates_age" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>电话：</td>
+					<td><input type="text" name="s_phone" id="updates_phone" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>学历：</td>
+					<td><input type="text" name="s_education" id="updates_education" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>状态：</td>
+					<td><input type="text" name="s_state" id="updates_state" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>来源渠道：</td>
+					<td><input type="text" name="s_msgsource" id="updates_msgsource" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>来源网站：</td>
+					<td><input type="text" name="s_sourceurl" id="updates_sourceurl" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>来源关键词：</td>
+					<td><input type="text" name="s_sourcekeyword" id="updates_sourcekeyword" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>所在区域：</td>
+					<td><input type="text" name="s_address" id="updates_address" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>学员关注：</td>
+					<td><input type="text" name="s_concern" id="updates_concern" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>来源部门：</td>
+					<td><input type="text" name="s_frompart" id="updates_frompart" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>学员QQ：</td>
+					<td><input type="text" name="s_qq" id="updates_qq" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>微信号：</td>
+					<td><input type="text" name="s_weixin" id="updates_weixin" class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td>是否报备：</td>
+					<td><input type="text" name="s_isbaobei" id="updates_isbaobei" class="easyui-textbox"></td>
+				</tr>
+				
+			</table>
+		</form>
+	</div>
+	
+	
 </body>
 </html>

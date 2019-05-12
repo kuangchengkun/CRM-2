@@ -28,5 +28,18 @@ public class StudentsController {
 		return selectStu;	
 	}
 	
+	@RequestMapping(value="/deletestus",method=RequestMethod.POST)
+	@ResponseBody
+	public Integer deletestus(Integer s_id) {
+		System.out.println(s_id);
+		return studentsService.deleteStu(s_id);
+	}
 	
+	@RequestMapping(value="/updatestu",method=RequestMethod.POST)
+	@ResponseBody
+	public Integer updatestu(Students students) {
+		return studentsService.updateStu(students);
+		
+		
+	}
 }

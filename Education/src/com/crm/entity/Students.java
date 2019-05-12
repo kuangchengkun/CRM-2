@@ -16,6 +16,13 @@ public class Students {
 	private String s_phone;
 	private String s_state;
 	private String s_education;
+	private String s_stuclass;
+	public String getS_stuclass() {
+		return s_stuclass;
+	}
+	public void setS_stuclass(String s_stuclass) {
+		this.s_stuclass = s_stuclass;
+	}
 	public String getS_education() {
 		return s_education;
 	}
